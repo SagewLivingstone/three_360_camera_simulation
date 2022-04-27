@@ -1,26 +1,39 @@
-import * as THREE from "./node_modules/three/build/three.module.js";
+import * as THREE from "./three/build/three.module.js";
+
+import { EffectComposer } from './three/examples/jsm/postprocessing/EffectComposer.js';
+
+import { GLTFLoader } from "./three/examples/jsm/loaders/GLTFLoader.js";
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 75, window.innerWidth / window.innerHeight, 0.1, 1000 );
+
+const camera = new THREE.PerspectiveCamera( 140, window.innerWidth / window.innerHeight, 0.001, 1000 );
 
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-const geometry = new THREE.BoxGeometry();
-const material = new THREE.MeshBasicMaterial( { color: 0x00ff00 } );
-const cube = new THREE.Mesh( geometry, material );
-scene.add( cube );
+// const composer = new EffectComposer( renderer );
 
-camera.position.z = 5;
-camera.position.y = 5;
-camera.lookAt(0, 0, 0);
+camera.lookAt(1, 0, 0);
+
+const gltfLoader = new GLTFLoader();
+
+gltfLoader.load( "./resources/checkerboard_box.glb", (gltf) => {
+    gltf.scene.rotation.z = 0.5 * Math.PI;
+    scene.add( gltf.scene );
+}, undefined, (error) => {
+    console.error(error);
+});
+
+const light = new THREE.AmbientLight( 0xffffff );
+scene.add(light);
+
+const envMap = new THREE.TextureLoader().load("resources/CERN_360.jpg");
+envMap.mapping = THREE.EquirectangularRefractionMapping;
+scene.background = envMap;
 
 function animate() {
 	requestAnimationFrame( animate );
-
-    cube.rotation.y += 0.01;
-    cube.rotation.x += 0.01;
 
 	renderer.render( scene, camera );
 }
