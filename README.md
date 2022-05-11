@@ -1,6 +1,9 @@
 # Three.js 360 Camera Simulation
 
-### Code
+### *Sage Livingstone - UW Graphics Group*
+#### *Last updated: 5/11/2022*
+
+## Code
 
 The goal of this project is to simulate the usage and properties of a physical 360 camera within a three.js environment. The code uses a modified version of the [THREE.CubemapToEquirectangular](https://github.com/spite/THREE.CubemapToEquirectangular) library, with a couple key changes: 1. the library has been adapted to be a module so it can be imported like any of the Three example code 2. it has been updated to function in three.js version 139 (the original library has not had support for 5+ years).
 
@@ -12,7 +15,7 @@ When the `Capture Pano` button is pressed, a second three scene and camera setup
 
 ![](example_pano.png)
 
-### Physical Camera Tests
+## Physical Camera Tests
 
 ![](ricoh_theta_v.png)  
 
