@@ -39,10 +39,24 @@ This has been found to be a result of an intrinsic property of the camera: that 
 
 ![](theta_v_top_view.png)  
 
-In this space between the two lenses, and extending perpendicularly outward, there is a zone where the two lenses' field-of-views do not reach each other, resulting in the blind spot seen in the images. The software attempts to compensate by slightly overlapping the edges of each camera's image, and therefore we see ghosting in the captured images. However, this effect seems to be almost mitigated at a distance of <DISTANCE>, and thus it becomes clear that the lenses are actually slightly higher than 180 degree FOV. The following image demonstrates this phenomenon:
+In this space between the two lenses, and extending perpendicularly outward, there is a zone where the two lenses' field-of-views do not reach each other, resulting in the blind spot seen in the images. The software attempts to compensate by slightly overlapping the edges of each camera's image, and therefore we see ghosting in the captured images. However, when testing this effect seems to be almost mitigated at a distance of 38 inches from the sensor, and thus it becomes clear that the lenses are actually slightly higher than 180 degree FOV. The following image demonstrates this phenomenon:
 
 ![](theta_v_blindspot.png)
 
 Because of the distance between the two lenses, there exists a triangular blindspot `B` up to a distance `L` from the center of the lenses. At distance `L` the FOVs of the lenses perfectly meet, effectively avoiding this issue. It should also be noted that beyond this distance the lenses FOVs begin to overlap, resulting in other ghosting issues which can be seen in specific cases.
 
-Further testing is needed to determine a more precise distance for the blindspot, and also to potentially study the effects at longer distances. However, the characteristics found here give a solid understanding of the imperfections of this physical 360 degree camera.
+The distance of `L` was tested for using a checker pattern and measuring tape. The pattern was placed at varied distances from the lens until the pattern became regular in the camera image.
+
+*Test image at 10in from lens:*
+
+![](./physical_test_images/theta_v_stitchtest_10.jpg)
+
+*20in from lens:*
+
+![](./physical_test_images/theta_v_stitchtest_20.jpg)
+
+*38in from lens:*
+
+![](./physical_test_images/theta_v_stitchtest_38.jpg)
+
+Further testing is needed to determine a more precise distance for the blindspot, and also to potentially study the effects at much longer distances. However, the characteristics found here give a solid understanding of the imperfections of this physical 360 degree camera.
