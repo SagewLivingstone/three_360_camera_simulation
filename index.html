@@ -4,10 +4,29 @@
 		<meta charset="utf-8">
 		<title>360 Camera Viewer</title>
 		<style>
-			body { margin: 0; }
+			body { margin: 0;
+				font-family: Monospace;
+				background-color: #f0f0f0;
+				color: white;
+				margin: 0px;
+				overflow: hidden;
+			}
+
+			#capture{
+				position: absolute;
+				left: 20px;
+				top: 20px;
+				padding: 10px;
+				border: 1px solid white;
+				z-index: 100;
+				cursor: pointer;
+				background-color: rgba( 0,0,0,.4);
+			}
 		</style>
 	</head>
 	<body>
+		<div id="capture" >Capture Pano</div>
+
 		<script type="module" src="main.js"></script>
 	</body>
 </html>

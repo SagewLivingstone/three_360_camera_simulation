@@ -1,11 +1,14 @@
 import * as THREE from "./three/build/three.module.js";
 
+// import "./CubemapToEquirectangular.js";
+
 import { EffectComposer } from './three/examples/jsm/postprocessing/EffectComposer.js';
 import { RenderPass } from './three/examples/jsm/postprocessing/RenderPass.js';
 import { ShaderPass } from "./three/examples/jsm/postprocessing/ShaderPass.js";
 
 import { GLTFLoader } from "./three/examples/jsm/loaders/GLTFLoader.js";
 import { FisheyeShader } from "./FisheyeShader.js";
+import { CubemapToEquirectangular } from "./CubemapToEquirectangular.js";
 
 // *** Setup scene and camera ***
 
@@ -20,6 +23,8 @@ const renderer = new THREE.WebGLRenderer();
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
+var equiManaged = new CubemapToEquirectangular( renderer, true );
+
 const composer = new EffectComposer( renderer );
 composer.addPass( new RenderPass( scene, camera ) );
 
@@ -27,7 +32,7 @@ let effect = new ShaderPass( FisheyeShader );
 composer.addPass(effect);
 effect.renderToScreen = true;
 
-let horizontalFOV = 170.0;
+let horizontalFOV = 140.0;
 let strength = 1.0;
 let cylindricalRatio = 2;
 let height = Math.tan( THREE.Math.degToRad(horizontalFOV) / 2) / camera.aspect;
@@ -62,6 +67,10 @@ scene.add(light);
 const envMap = new THREE.TextureLoader().load("resources/CERN_360.jpg");
 envMap.mapping = THREE.EquirectangularRefractionMapping;
 scene.background = envMap;
+
+document.getElementById( 'capture' ).addEventListener( 'click', function( e ) {
+    equiManaged.update( camera, scene );
+});
 
 // *** Render scene ***
 

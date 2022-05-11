@@ -1,14 +1,12 @@
-;(function() {
+import * as THREE from "./three/build/three.module.js";
 
-	"use strict";
+var root = this
 
-	var root = this
+// var has_require = typeof require !== 'undefined'
 
-	var has_require = typeof require !== 'undefined'
-
-	var THREE = root.THREE || has_require && require('three')
-	if( !THREE )
-		throw new Error( 'CubemapToEquirectangular requires three.js' )
+// var THREE = root.THREE || has_require && require('three')
+// if( !THREE )
+// 	throw new Error( 'CubemapToEquirectangular requires three.js' )
 
 var vertexShader = `
 attribute vec3 position;
@@ -128,10 +126,20 @@ CubemapToEquirectangular.prototype.setSize = function( width, height ) {
 CubemapToEquirectangular.prototype.getCubeCamera = function( size ) {
 
 	var cubeMapSize = Math.min( this.cubeMapSize, size );
-	this.cubeCamera = new THREE.CubeCamera( .1, 1000, cubeMapSize );
 
-	var options = { format: THREE.RGBAFormat, magFilter: THREE.LinearFilter, minFilter: THREE.LinearFilter };
-	this.cubeCamera.renderTarget = new THREE.WebGLRenderTargetCube( cubeMapSize, cubeMapSize, options );
+	var cubeRenderTarget = new THREE.WebGLCubeRenderTarget( cubeMapSize,  // TODO: What is this
+		{ 
+			format: THREE.RGBAFormat,
+			// generateMipmaps: true,
+			magFilter: THREE.LinearFilter,
+		  	minFilter: THREE.LinearFilter
+		}
+	);
+
+	this.cubeCamera = new THREE.CubeCamera( .1, 10000, cubeRenderTarget );
+
+	// var options = { format: THREE.RGBAFormat, magFilter: THREE.LinearFilter, minFilter: THREE.LinearFilter };
+	// this.cubeCamera.renderTarget = new THREE.WebGLRenderTargetCube( cubeMapSize, cubeMapSize, options );
 
 	return this.cubeCamera;
 
@@ -147,7 +155,8 @@ CubemapToEquirectangular.prototype.attachCubeCamera = function( camera ) {
 CubemapToEquirectangular.prototype.convert = function( cubeCamera, download ) {
 
 	this.quad.material.uniforms.map.value = cubeCamera.renderTarget.texture;
-	this.renderer.render( this.scene, this.camera, this.output, true );
+	this.renderer.setRenderTarget(this.output);
+	this.renderer.render( this.scene, this.camera );
 
 	var pixels = new Uint8Array( 4 * this.width * this.height );
 	this.renderer.readRenderTargetPixels( this.output, 0, 0, this.width, this.height, pixels );
@@ -157,6 +166,8 @@ CubemapToEquirectangular.prototype.convert = function( cubeCamera, download ) {
 	if( download !== false ) {
 		this.download( imageData );
 	}
+
+	this.renderer.setRenderTarget(null);
 
 	return imageData
 
@@ -191,21 +202,11 @@ CubemapToEquirectangular.prototype.update = function( camera, scene ) {
 	var autoClear = this.renderer.autoClear;
 	this.renderer.autoClear = true;
 	this.cubeCamera.position.copy( camera.position );
-	this.cubeCamera.updateCubeMap( this.renderer, scene );
+	this.cubeCamera.update( this.renderer, scene );
 	this.renderer.autoClear = autoClear;
 
 	this.convert( this.cubeCamera );
 
 }
 
-if( typeof exports !== 'undefined' ) {
-	if( typeof module !== 'undefined' && module.exports ) {
-		exports = module.exports = CubemapToEquirectangular
-	}
-	exports.CubemapToEquirectangular = CubemapToEquirectangular
-}
-else {
-	root.CubemapToEquirectangular = CubemapToEquirectangular
-}
-
-}).call(this);
+export { CubemapToEquirectangular };
