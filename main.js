@@ -13,7 +13,7 @@ import { CubemapToEquirectangular } from "./CubemapToEquirectangular.js";
 // *** Setup scene and camera ***
 
 const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera( 140, window.innerWidth / window.innerHeight, 0.001, 1000 );
+const camera = new THREE.PerspectiveCamera( 170, window.innerWidth / window.innerHeight, 0.001, 1000 );
 
 camera.lookAt(1, 0, 0);
 
@@ -32,7 +32,7 @@ let effect = new ShaderPass( FisheyeShader );
 composer.addPass(effect);
 effect.renderToScreen = true;
 
-let horizontalFOV = 140.0;
+let horizontalFOV = 160.0;
 let strength = 1.0;
 let cylindricalRatio = 2;
 let height = Math.tan( THREE.Math.degToRad(horizontalFOV) / 2) / camera.aspect;
